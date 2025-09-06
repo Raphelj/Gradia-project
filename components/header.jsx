@@ -21,8 +21,8 @@ const Header = () => {
             alt="Gradia Logo"
             width={150}
             height={250}
-            className="h-12 py-1 w-auto object-contain"
-
+            className="h-32 py-1 w-auto object-contain"
+            priority
           />
         </Link>
         <div className="flex items-center space-x-2 md:space-x-4">
@@ -36,7 +36,7 @@ const Header = () => {
            
 
            <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button>
                 <StarsIcon className="h-4 w-4" />
                 <span className="hidden md:block">Growth Tools</span>
