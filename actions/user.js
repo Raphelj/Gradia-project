@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { generateAIInsights } from "./dashboard";
 
 export async function updateUser(data) {
   const { userId } = await auth();
@@ -26,20 +27,15 @@ export async function updateUser(data) {
 
         // If industry doesn't exist, create it with default values
         if (!industryInsight) {
-
-          industryInsight = await tx.industryInsight.create({
-            data: {
-              industry: data.industry,
-              salaryRanges: [], // default empty array
-              growthRate: 0, // default value
-              demandLevel: "MEDIUM", // default value
-              topSkills: [], // default empty array
-              marketOutlook: "NEUTRAL", // default value
-              keyTrends: [], // default value
-              recommendedSkills: [], // default empty array
-              nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
-          });
+          const insights = await generateAIInsights(data.industry);
+          
+              industryInsight = await db.industryInsight.create({
+                data: {
+                  industry: data.industry,
+                  ...insights,
+                  nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                },
+              }); 
         }
 
         // Now update the user
